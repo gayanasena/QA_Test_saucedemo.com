@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "testcafe": "^2.2.0"
+  },
+  "scripts": {
+    "demo-test": "testcafe chrome Test/Session/test.ts"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^7.6.0"
+  }
+}
