@@ -1,36 +1,56 @@
 import { Selector } from 'testcafe';
 import { faker } from '@faker-js/faker';
+import Page from './PageModels/pageModel'
+
+const { userVariables} = require('testcafe')
 
 fixture `Part1 access demo site`
-    .page `https://www.saucedemo.com`;
+    .page(userVariables.url)
 
 test('Automate Site Testing', async t => {
     console.log("---- Site Testing ----");
 
-    await t
-    .expect(Selector('H4').withText('Accepted usernames are:').exists).ok()
-    .typeText(Selector('#user-name'),'performance_glitch_user')
-    .typeText(Selector('#password'),'secret_sauce')
-    .click(Selector('#login-button'))
-    .expect(Selector('#item_5_title_link').withText('Sauce Labs Fleece Jacket').exists).ok()
-    .expect(Selector('.inventory_item_price').withText('$49.99').exists).ok()
-    .click(Selector('#add-to-cart-sauce-labs-backpack'))
-    .click(Selector('#add-to-cart-sauce-labs-fleece-jacket'))
-    .click(Selector('.shopping_cart_link'))
-    .wait(2000)
-    .expect(Selector('.inventory_item_name').withText('Sauce Labs Backpack').exists).ok()
-    .expect(Selector('.inventory_item_name').withText('Sauce Labs Fleece Jacket').exists).ok()
-    .click(Selector('#checkout'))
-    .wait(2000)
-    .typeText(Selector('#first-name'),faker.name.firstName())
-    .typeText(Selector('#last-name'),faker.name.lastName())
-    .typeText(Selector('#postal-code'),faker.address.zipCode())
-    .wait(2000)
-    .click(Selector('#continue'))
-    .click(Selector('#finish'))
-    .wait(2000)
-    .expect(Selector('.complete-header').withText('THANK YOU FOR YOUR ORDER').exists).ok()
-    .wait(5000)
+    // check and veridy it is login page
+    await Page.checkLoginPageHeader();
+
+    // type username and password
+    await Page.typeUsername(userVariables.username);
+    await Page.typePassword(userVariables.password);
+
+    // click on ligin button
+    await Page.clickLoginButton();
+
+    // check fleece jacket availability and price tag
+    await Page.checkFleeceJacketLabel();
+    await Page.checkFleeceJacketPrice();
+
+    // add 2 type of items to cart
+    await Page.clickCartBackpack();
+    await Page.clickCartJacket();
+
+    // click on shopping cart
+    await Page.clickOnShoppingCart();
+
+    // check if bought 2 items on cart
+    await Page.checkItem01();
+    await Page.checkItem02();
+
+    // checkout from cart
+    await Page.clickOnCheckout();
+
+    // fill user information in form
+    await Page.typeFirstname(faker.name.firstName());
+    await Page.typeLastname(faker.name.lastName());
+    await Page.TypeZipCode(faker.address.zipCode());
+
+    // click on continue 
+    await Page.clickContinueButton();
+
+    // click on finish
+    await Page.clickFinishButton();
+
+    // verify process came into the correct final page
+    await Page.thankyouHeader();
 
 });
 
