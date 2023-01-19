@@ -1,6 +1,12 @@
 import { Selector } from 'testcafe';
 import { faker } from '@faker-js/faker';
-import Page from './PageModels/pageModel'
+import cartPage  from './PageModels/cartPageModel'
+import checkoutComplete  from './PageModels/checkout-completePageModel'
+import checkoutOnePage from './PageModels/checkout-step-onePageModel'
+import checkoutTwoPage from './PageModels/checkout-step-twoPageModel'
+import inventoryPage from './PageModels/inventoryPageModel'
+import loginPage from './PageModels/loginPageModel'
+
 
 const { userVariables} = require('testcafe')
 
@@ -11,46 +17,46 @@ test('Automate Site Testing', async t => {
     console.log("---- Site Testing ----");
 
     // check and veridy it is login page
-    await Page.checkLoginPageHeader();
+    await loginPage.checkLoginPageHeader();
 
     // type username and password
-    await Page.typeUsername(userVariables.username);
-    await Page.typePassword(userVariables.password);
+    await loginPage.typeUsername(userVariables.username);
+    await loginPage.typePassword(userVariables.password);
 
     // click on ligin button
-    await Page.clickLoginButton();
+    await loginPage.clickLoginButton();
 
     // check fleece jacket availability and price tag
-    await Page.checkFleeceJacketLabel();
-    await Page.checkFleeceJacketPrice();
+    await inventoryPage.checkFleeceJacketLabel();
+    await inventoryPage.checkFleeceJacketPrice();
 
     // add 2 type of items to cart
-    await Page.clickCartBackpack();
-    await Page.clickCartJacket();
+    await inventoryPage.clickCartBackpack();
+    await inventoryPage.clickCartJacket();
 
     // click on shopping cart
-    await Page.clickOnShoppingCart();
+    await inventoryPage.clickOnShoppingCart();
 
     // check if bought 2 items on cart
-    await Page.checkItem01();
-    await Page.checkItem02();
+    await cartPage.checkItem01();
+    await cartPage.checkItem02();
 
     // checkout from cart
-    await Page.clickOnCheckout();
+    await cartPage.clickOnCheckout();
 
     // fill user information in form
-    await Page.typeFirstname(faker.name.firstName());
-    await Page.typeLastname(faker.name.lastName());
-    await Page.TypeZipCode(faker.address.zipCode());
+    await checkoutOnePage.typeFirstname(faker.name.firstName());
+    await checkoutOnePage.typeLastname(faker.name.lastName());
+    await checkoutOnePage.TypeZipCode(faker.address.zipCode());
 
     // click on continue 
-    await Page.clickContinueButton();
+    await checkoutOnePage.clickContinueButton();
 
     // click on finish
-    await Page.clickFinishButton();
+    await checkoutTwoPage.clickFinishButton();
 
     // verify process came into the correct final page
-    await Page.thankyouHeader();
+    await checkoutComplete.thankyouHeader();
 
 });
 
